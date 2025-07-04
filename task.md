@@ -40,7 +40,7 @@
 - [x] pnpm パッケージマネージャー設定
 - [x] TypeScript と Angular 設定の最適化
 - [x] Tailwind CSS v4 統合
-- [ ] 開発用スクリプトの設定
+- [x] 開発用スクリプトの設定
 
 #### 1.1.2 Angular フロントエンド基盤
 
