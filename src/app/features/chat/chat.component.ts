@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { StateService } from '../../core/services/state.service';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 
@@ -143,6 +143,8 @@ interface ChatMessage {
   `,
 })
 export class ChatComponent {
+  private readonly stateService = inject(StateService);
+
   // Demo messages for scroll testing
   readonly demoMessages: ChatMessage[] = [
     {
@@ -229,6 +231,4 @@ export class ChatComponent {
       timestamp: '10:56',
     },
   ];
-
-  constructor(private readonly stateService: StateService) {}
 }

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { StateService } from '../../core/services/state.service';
 import { IconComponent } from '../../shared/components/icon/icon.component';
@@ -147,6 +147,8 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
   `,
 })
 export class MainLayoutComponent {
+  private readonly stateService = inject(StateService);
+
   // Demo data for scroll testing
   readonly demoProjects = [
     { id: 1, name: 'E-commerce Platform' },
@@ -175,8 +177,6 @@ export class MainLayoutComponent {
     { id: 11, title: 'Error handling patterns' },
     { id: 12, title: 'State management solutions' },
   ];
-
-  constructor(private readonly stateService: StateService) {}
 
   sidebarClasses() {
     const isExpanded = this.stateService.uiState().sidebarExpanded;

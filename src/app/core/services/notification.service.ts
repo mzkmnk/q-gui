@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { StateService } from './state.service';
 import { Notification, NotificationType } from '../interfaces';
 import { UI_CONFIG } from '../constants/app.constants';
@@ -7,7 +7,7 @@ import { UI_CONFIG } from '../constants/app.constants';
   providedIn: 'root',
 })
 export class NotificationService {
-  constructor(private readonly stateService: StateService) {}
+  private readonly stateService = inject(StateService);
 
   show(
     type: NotificationType,
