@@ -1,0 +1,636 @@
+---
+alwaysApply: true
+---
+
+# TDD 開発ルール（t-wada 推奨手法）
+
+## 📝 TDD（Test-Driven Development）の基本原則
+
+### Red-Green-Refactor サイクル
+
+TDD の核心は **Red-Green-Refactor** の 3 段階サイクルです：
+
+1. **🔴 Red**: 失敗するテストを書く
+
+   - まだ存在しない機能に対するテストを書く
+   - テストが失敗することを確認する
+   - 失敗理由が期待通りであることを確認する
+
+2. **🟢 Green**: テストを通すための最小限のコードを書く
+
+   - とにかくテストを通すことだけを考える
+   - 最小限の実装で満足する
+   - 美しいコードは後で考える
+
+3. **🔵 Refactor**: コードを改善する
+   - テストが通った状態でコードを改善
+   - 重複を排除し、意図を明確にする
+   - テストが通り続けることを確認しながら進める
+
+## 🎯 実装戦略
+
+### 仮実装 → 三角測量 → 明白な実装
+
+1. **仮実装（Fake Implementation）**
+
+   ```typescript
+   // 最初のテスト
+   it("should return 1 when input is 1", () => {
+     expect(identity(1)).toBe(1);
+   });
+
+   // 仮実装
+   function identity(x: number): number {
+     return 1; // ハードコード
+   }
+   ```
+
+2. **三角測量（Triangulation）**
+
+   ```typescript
+   // 2つ目のテスト追加
+   it("should return 2 when input is 2", () => {
+     expect(identity(2)).toBe(2);
+   });
+
+   // 一般化
+   function identity(x: number): number {
+     return x; // 一般的な実装
+   }
+   ```
+
+3. **明白な実装（Obvious Implementation）**
+   - 実装方法が明らかな場合は直接実装
+   - ただし、確信が持てない場合は仮実装から開始
+
+### 小さなステップでの進行
+
+- **1 つのテストケースずつ**実装する
+- **1 つの assert 文**から始める
+- **最小限の変更**でテストを通す
+- **大きな機能を小さな単位**に分割する
+
+## 🧪 テスト作成のガイドライン
+
+### テストの構造（AAA パターン）
+
+```typescript
+describe("AuthService", () => {
+  it("should authenticate user with valid credentials", () => {
+    // Arrange（準備）
+    const service = new AuthService();
+    const credentials = { username: "test", password: "password" };
+
+    // Act（実行）
+    const result = service.authenticate(credentials);
+
+    // Assert（検証）
+    expect(result.isAuthenticated).toBe(true);
+  });
+});
+```
+
+### テスト名の付け方
+
+- **should + 期待する動作**の形式
+- **具体的で明確**な表現
+- **ビジネス的な意味**を含める
+
+```typescript
+// ❌ 悪い例
+it("test login", () => {});
+
+// ✅ 良い例
+it("should return authenticated user when valid credentials are provided", () => {});
+it("should throw error when password is incorrect", () => {});
+```
+
+### テストケースの優先順位
+
+1. **正常系（Happy Path）**から始める
+2. **境界値**をテストする
+3. **異常系**を追加する
+4. **エラーケース**を網羅する
+
+## 🏗️ Angular + TypeScript での TDD 実践
+
+### 1. コンポーネントの TDD
+
+```typescript
+// 1. Red: 失敗するテストを書く
+describe("ChatComponent", () => {
+  it("should render message input field", () => {
+    const fixture = TestBed.createComponent(ChatComponent);
+    const compiled = fixture.nativeElement;
+
+    expect(compiled.querySelector('input[type="text"]')).toBeTruthy();
+  });
+});
+
+// 2. Green: 最小限の実装
+@Component({
+  template: `<input type="text" />`,
+})
+export class ChatComponent {}
+
+// 3. Refactor: 改善
+@Component({
+  template: `
+    <input
+      type="text"
+      [value]="message()"
+      (input)="updateMessage($event)"
+      placeholder="メッセージを入力..."
+    />
+  `,
+})
+export class ChatComponent {
+  message = signal("");
+
+  updateMessage(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.message.set(target.value);
+  }
+}
+```
+
+### 2. サービスの TDD
+
+```typescript
+// 1. Red: 失敗するテストを書く
+describe("AuthService", () => {
+  it("should return profile list from AWS CLI config", async () => {
+    const service = new AuthService();
+
+    const profiles = await service.getProfiles();
+
+    expect(profiles).toBeInstanceOf(Array);
+    expect(profiles.length).toBeGreaterThan(0);
+  });
+});
+
+// 2. Green: 最小限の実装
+@Injectable({ providedIn: "root" })
+export class AuthService {
+  async getProfiles(): Promise<AwsProfile[]> {
+    return []; // 仮実装
+  }
+}
+
+// 3. Refactor: 実際の実装
+@Injectable({ providedIn: "root" })
+export class AuthService {
+  async getProfiles(): Promise<AwsProfile[]> {
+    return await invoke("get_aws_profiles");
+  }
+}
+```
+
+## 🔧 Tauri バックエンド（Rust）での TDD
+
+### 1. 関数の TDD
+
+```rust
+// 1. Red: 失敗するテストを書く
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn should_parse_aws_config_file() {
+        let config_content = "[profile test]\nregion = us-east-1";
+
+        let profiles = parse_aws_config(config_content).unwrap();
+
+        assert_eq!(profiles.len(), 1);
+        assert_eq!(profiles[0].name, "test");
+        assert_eq!(profiles[0].region, "us-east-1");
+    }
+}
+
+// 2. Green: 最小限の実装
+pub fn parse_aws_config(content: &str) -> Result<Vec<AwsProfile>, Error> {
+    Ok(vec![AwsProfile {
+        name: "test".to_string(),
+        region: "us-east-1".to_string(),
+    }])
+}
+
+// 3. Refactor: 実際のパーサー実装
+pub fn parse_aws_config(content: &str) -> Result<Vec<AwsProfile>, Error> {
+    // 実際のINIファイルパーサー実装
+}
+```
+
+## 📋 TDD 実践チェックリスト
+
+### 開発前の準備
+
+- [ ] **テスト環境**が整っている
+- [ ] **テストランナー**が設定されている
+- [ ] **モックライブラリ**が利用可能
+
+### Red フェーズ
+
+- [ ] **失敗するテスト**を書いた
+- [ ] **期待される失敗理由**を確認した
+- [ ] **テスト名**が明確で分かりやすい
+- [ ] **1 つのケース**に集中している
+
+### Green フェーズ
+
+- [ ] **最小限の実装**でテストを通した
+- [ ] **ハードコード**や仮実装を使った
+- [ ] **テストが通る**ことを確認した
+- [ ] **他のテストが壊れていない**
+
+### Refactor フェーズ
+
+- [ ] **重複コード**を排除した
+- [ ] **意図が明確**なコードにした
+- [ ] **すべてのテスト**が通る
+- [ ] **パフォーマンス**を考慮した
+
+## 🚫 TDD でやってはいけないこと
+
+### Red フェーズでの禁止事項
+
+- ❌ 複数のテストケースを一度に書く
+- ❌ 実装コードを先に書く
+- ❌ 曖昧なテスト名を付ける
+
+### Green フェーズでの禁止事項
+
+- ❌ 完璧なコードを書こうとする
+- ❌ リファクタリングを同時に行う
+- ❌ 将来の機能を先取りして実装する
+
+### Refactor フェーズでの禁止事項
+
+- ❌ テストが失敗している状態でリファクタリング
+- ❌ 機能追加とリファクタリングを同時に行う
+- ❌ テストコードのリファクタリングを怠る
+
+## 🎯 品質の高いテストの特徴
+
+### FIRST 原則
+
+- **F**ast: 高速に実行される
+- **I**ndependent: 独立している（他のテストに依存しない）
+- **R**epeatable: 繰り返し実行可能
+- **S**elf-validating: 自己完結的に検証
+- **T**imely: タイムリーに書かれる（実装前）
+
+### テストの可読性
+
+```typescript
+// ❌ 悪い例
+it("test1", () => {
+  const x = new AuthService();
+  const y = x.auth({ u: "test", p: "pass" });
+  expect(y.ok).toBe(true);
+});
+
+// ✅ 良い例
+it("should authenticate user when valid credentials provided", () => {
+  // Arrange
+  const authService = new AuthService();
+  const validCredentials = {
+    username: "testuser",
+    password: "validpassword",
+  };
+
+  // Act
+  const result = authService.authenticate(validCredentials);
+
+  // Assert
+  expect(result.isAuthenticated).toBe(true);
+  expect(result.user.username).toBe("testuser");
+});
+```
+
+## 📚 参考資料
+
+- [テスト駆動開発](https://www.ohmsha.co.jp/book/9784274050886/) - Kent Beck 著
+- [Growing Object-Oriented Software, Guided by Tests](http://www.growing-object-oriented-software.com/)
+- [和田卓人さんの TDD 動画・記事](https://t-wada.hatenablog.jp/)
+
+---
+
+**Remember**: TDD は単なるテスト手法ではなく、**設計手法**です。小さなステップで進み、常にテストが通る状態を維持することで、安全で確実な開発が可能になります。
+# TDD 開発ルール（t-wada 推奨手法）
+
+## 📝 TDD（Test-Driven Development）の基本原則
+
+### Red-Green-Refactor サイクル
+
+TDD の核心は **Red-Green-Refactor** の 3 段階サイクルです：
+
+1. **🔴 Red**: 失敗するテストを書く
+
+   - まだ存在しない機能に対するテストを書く
+   - テストが失敗することを確認する
+   - 失敗理由が期待通りであることを確認する
+
+2. **🟢 Green**: テストを通すための最小限のコードを書く
+
+   - とにかくテストを通すことだけを考える
+   - 最小限の実装で満足する
+   - 美しいコードは後で考える
+
+3. **🔵 Refactor**: コードを改善する
+   - テストが通った状態でコードを改善
+   - 重複を排除し、意図を明確にする
+   - テストが通り続けることを確認しながら進める
+
+## 🎯 実装戦略
+
+### 仮実装 → 三角測量 → 明白な実装
+
+1. **仮実装（Fake Implementation）**
+
+   ```typescript
+   // 最初のテスト
+   it("should return 1 when input is 1", () => {
+     expect(identity(1)).toBe(1);
+   });
+
+   // 仮実装
+   function identity(x: number): number {
+     return 1; // ハードコード
+   }
+   ```
+
+2. **三角測量（Triangulation）**
+
+   ```typescript
+   // 2つ目のテスト追加
+   it("should return 2 when input is 2", () => {
+     expect(identity(2)).toBe(2);
+   });
+
+   // 一般化
+   function identity(x: number): number {
+     return x; // 一般的な実装
+   }
+   ```
+
+3. **明白な実装（Obvious Implementation）**
+   - 実装方法が明らかな場合は直接実装
+   - ただし、確信が持てない場合は仮実装から開始
+
+### 小さなステップでの進行
+
+- **1 つのテストケースずつ**実装する
+- **1 つの assert 文**から始める
+- **最小限の変更**でテストを通す
+- **大きな機能を小さな単位**に分割する
+
+## 🧪 テスト作成のガイドライン
+
+### テストの構造（AAA パターン）
+
+```typescript
+describe("AuthService", () => {
+  it("should authenticate user with valid credentials", () => {
+    // Arrange（準備）
+    const service = new AuthService();
+    const credentials = { username: "test", password: "password" };
+
+    // Act（実行）
+    const result = service.authenticate(credentials);
+
+    // Assert（検証）
+    expect(result.isAuthenticated).toBe(true);
+  });
+});
+```
+
+### テスト名の付け方
+
+- **should + 期待する動作**の形式
+- **具体的で明確**な表現
+- **ビジネス的な意味**を含める
+
+```typescript
+// ❌ 悪い例
+it("test login", () => {});
+
+// ✅ 良い例
+it("should return authenticated user when valid credentials are provided", () => {});
+it("should throw error when password is incorrect", () => {});
+```
+
+### テストケースの優先順位
+
+1. **正常系（Happy Path）**から始める
+2. **境界値**をテストする
+3. **異常系**を追加する
+4. **エラーケース**を網羅する
+
+## 🏗️ Angular + TypeScript での TDD 実践
+
+### 1. コンポーネントの TDD
+
+```typescript
+// 1. Red: 失敗するテストを書く
+describe("ChatComponent", () => {
+  it("should render message input field", () => {
+    const fixture = TestBed.createComponent(ChatComponent);
+    const compiled = fixture.nativeElement;
+
+    expect(compiled.querySelector('input[type="text"]')).toBeTruthy();
+  });
+});
+
+// 2. Green: 最小限の実装
+@Component({
+  template: `<input type="text" />`,
+})
+export class ChatComponent {}
+
+// 3. Refactor: 改善
+@Component({
+  template: `
+    <input
+      type="text"
+      [value]="message()"
+      (input)="updateMessage($event)"
+      placeholder="メッセージを入力..."
+    />
+  `,
+})
+export class ChatComponent {
+  message = signal("");
+
+  updateMessage(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.message.set(target.value);
+  }
+}
+```
+
+### 2. サービスの TDD
+
+```typescript
+// 1. Red: 失敗するテストを書く
+describe("AuthService", () => {
+  it("should return profile list from AWS CLI config", async () => {
+    const service = new AuthService();
+
+    const profiles = await service.getProfiles();
+
+    expect(profiles).toBeInstanceOf(Array);
+    expect(profiles.length).toBeGreaterThan(0);
+  });
+});
+
+// 2. Green: 最小限の実装
+@Injectable({ providedIn: "root" })
+export class AuthService {
+  async getProfiles(): Promise<AwsProfile[]> {
+    return []; // 仮実装
+  }
+}
+
+// 3. Refactor: 実際の実装
+@Injectable({ providedIn: "root" })
+export class AuthService {
+  async getProfiles(): Promise<AwsProfile[]> {
+    return await invoke("get_aws_profiles");
+  }
+}
+```
+
+## 🔧 Tauri バックエンド（Rust）での TDD
+
+### 1. 関数の TDD
+
+```rust
+// 1. Red: 失敗するテストを書く
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn should_parse_aws_config_file() {
+        let config_content = "[profile test]\nregion = us-east-1";
+
+        let profiles = parse_aws_config(config_content).unwrap();
+
+        assert_eq!(profiles.len(), 1);
+        assert_eq!(profiles[0].name, "test");
+        assert_eq!(profiles[0].region, "us-east-1");
+    }
+}
+
+// 2. Green: 最小限の実装
+pub fn parse_aws_config(content: &str) -> Result<Vec<AwsProfile>, Error> {
+    Ok(vec![AwsProfile {
+        name: "test".to_string(),
+        region: "us-east-1".to_string(),
+    }])
+}
+
+// 3. Refactor: 実際のパーサー実装
+pub fn parse_aws_config(content: &str) -> Result<Vec<AwsProfile>, Error> {
+    // 実際のINIファイルパーサー実装
+}
+```
+
+## 📋 TDD 実践チェックリスト
+
+### 開発前の準備
+
+- [ ] **テスト環境**が整っている
+- [ ] **テストランナー**が設定されている
+- [ ] **モックライブラリ**が利用可能
+
+### Red フェーズ
+
+- [ ] **失敗するテスト**を書いた
+- [ ] **期待される失敗理由**を確認した
+- [ ] **テスト名**が明確で分かりやすい
+- [ ] **1 つのケース**に集中している
+
+### Green フェーズ
+
+- [ ] **最小限の実装**でテストを通した
+- [ ] **ハードコード**や仮実装を使った
+- [ ] **テストが通る**ことを確認した
+- [ ] **他のテストが壊れていない**
+
+### Refactor フェーズ
+
+- [ ] **重複コード**を排除した
+- [ ] **意図が明確**なコードにした
+- [ ] **すべてのテスト**が通る
+- [ ] **パフォーマンス**を考慮した
+
+## 🚫 TDD でやってはいけないこと
+
+### Red フェーズでの禁止事項
+
+- ❌ 複数のテストケースを一度に書く
+- ❌ 実装コードを先に書く
+- ❌ 曖昧なテスト名を付ける
+
+### Green フェーズでの禁止事項
+
+- ❌ 完璧なコードを書こうとする
+- ❌ リファクタリングを同時に行う
+- ❌ 将来の機能を先取りして実装する
+
+### Refactor フェーズでの禁止事項
+
+- ❌ テストが失敗している状態でリファクタリング
+- ❌ 機能追加とリファクタリングを同時に行う
+- ❌ テストコードのリファクタリングを怠る
+
+## 🎯 品質の高いテストの特徴
+
+### FIRST 原則
+
+- **F**ast: 高速に実行される
+- **I**ndependent: 独立している（他のテストに依存しない）
+- **R**epeatable: 繰り返し実行可能
+- **S**elf-validating: 自己完結的に検証
+- **T**imely: タイムリーに書かれる（実装前）
+
+### テストの可読性
+
+```typescript
+// ❌ 悪い例
+it("test1", () => {
+  const x = new AuthService();
+  const y = x.auth({ u: "test", p: "pass" });
+  expect(y.ok).toBe(true);
+});
+
+// ✅ 良い例
+it("should authenticate user when valid credentials provided", () => {
+  // Arrange
+  const authService = new AuthService();
+  const validCredentials = {
+    username: "testuser",
+    password: "validpassword",
+  };
+
+  // Act
+  const result = authService.authenticate(validCredentials);
+
+  // Assert
+  expect(result.isAuthenticated).toBe(true);
+  expect(result.user.username).toBe("testuser");
+});
+```
+
+## 📚 参考資料
+
+- [テスト駆動開発](https://www.ohmsha.co.jp/book/9784274050886/) - Kent Beck 著
+- [Growing Object-Oriented Software, Guided by Tests](http://www.growing-object-oriented-software.com/)
+- [和田卓人さんの TDD 動画・記事](https://t-wada.hatenablog.jp/)
+
+---
+
+**Remember**: TDD は単なるテスト手法ではなく、**設計手法**です。小さなステップで進み、常にテストが通る状態を維持することで、安全で確実な開発が可能になります。
