@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import type { ChatMessage } from '../../core/interfaces/chat.interface';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { MessageComponent } from '../../shared/components/message/message.component';
-import { ChatMessage } from '../../core/interfaces/chat.interface';
 
 @Component({
   selector: 'app-chat',

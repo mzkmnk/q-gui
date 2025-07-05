@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { ChatMessage } from '../../../core/interfaces/chat.interface';
+import type { ChatMessage } from '../../../core/interfaces/chat.interface';
 
 @Component({
   selector: 'app-message',
@@ -82,4 +82,4 @@ export class MessageComponent {
       minute: '2-digit',
     });
   }
-} 
+}

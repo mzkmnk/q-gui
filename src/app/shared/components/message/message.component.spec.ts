@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import type { ChatMessage } from '../../../core/interfaces/chat.interface';
 import { MessageComponent } from './message.component';
-import { ChatMessage } from '../../../core/interfaces/chat.interface';
 
 describe('MessageComponent', () => {
   let component: MessageComponent;
@@ -77,7 +77,7 @@ describe('MessageComponent', () => {
     const compiled = fixture.nativeElement;
     const messageContainer = compiled.querySelector('.flex');
     const messageContent = compiled.querySelector('.rounded-2xl');
-    
+
     expect(messageContainer.className).toContain('justify-end');
     expect(messageContent.className).toContain('bg-blue-600');
     expect(messageContent.className).toContain('text-white');
@@ -94,7 +94,7 @@ describe('MessageComponent', () => {
     const compiled = fixture.nativeElement;
     const messageContainer = compiled.querySelector('.flex');
     const messageContent = compiled.querySelector('.rounded-2xl');
-    
+
     expect(messageContainer.className).toContain('justify-start');
     expect(messageContent.className).toContain('bg-white');
     expect(messageContent.className).toContain('text-gray-900');
@@ -155,4 +155,4 @@ describe('MessageComponent', () => {
     expect(messageContainer.className).toContain('justify-start');
     expect(component.isUserMessage()).toBe(false);
   });
-}); 
+});
