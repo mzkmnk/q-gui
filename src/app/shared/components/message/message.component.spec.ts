@@ -63,13 +63,13 @@ describe('MessageComponent', () => {
     // Assert
     const compiled = fixture.nativeElement;
     const timestampElement = compiled.querySelector('span:last-child');
-    
+
     // 環境依存を避けるため、期待値を動的に計算
     const expectedTime = mockUserMessage.timestamp.toLocaleTimeString('ja-JP', {
       hour: '2-digit',
       minute: '2-digit',
     });
-    
+
     expect(timestampElement.textContent).toContain(expectedTime);
   });
 
@@ -145,7 +145,7 @@ describe('MessageComponent', () => {
       hour: '2-digit',
       minute: '2-digit',
     });
-    
+
     expect(formattedTime).toBe(expectedTime);
   });
 
