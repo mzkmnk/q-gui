@@ -63,7 +63,14 @@ describe('MessageComponent', () => {
     // Assert
     const compiled = fixture.nativeElement;
     const timestampElement = compiled.querySelector('span:last-child');
-    expect(timestampElement.textContent).toContain('19:30'); // UTC+9の時間
+    
+    // 環境依存を避けるため、期待値を動的に計算
+    const expectedTime = mockUserMessage.timestamp.toLocaleTimeString('ja-JP', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    
+    expect(timestampElement.textContent).toContain(expectedTime);
   });
 
   it('should apply correct styles for user message', () => {
@@ -133,7 +140,26 @@ describe('MessageComponent', () => {
     const formattedTime = component.formatTimestamp(mockUserMessage.timestamp);
 
     // Assert
-    expect(formattedTime).toBe('19:30'); // UTC+9の時間
+    // 環境依存を避けるため、期待値を動的に計算
+    const expectedTime = mockUserMessage.timestamp.toLocaleTimeString('ja-JP', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    
+    expect(formattedTime).toBe(expectedTime);
+  });
+
+  it('should format timestamp with correct pattern', () => {
+    // Arrange
+    fixture.componentRef.setInput('message', mockUserMessage);
+    fixture.detectChanges();
+
+    // Act
+    const formattedTime = component.formatTimestamp(mockUserMessage.timestamp);
+
+    // Assert
+    // 時間フォーマットのパターンをテスト（HH:MM形式）
+    expect(formattedTime).toMatch(/^\d{1,2}:\d{2}$/);
   });
 
   it('should handle different message roles', () => {
