@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { StateService } from './state.service';
-import { Notification, NotificationType } from '../interfaces';
 import { UI_CONFIG } from '../constants/app.constants';
+import type { Notification, NotificationType } from '../interfaces';
+import { StateService } from './state.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +16,7 @@ export class NotificationService {
     options?: {
       autoClose?: boolean;
       duration?: number;
-    }
+    },
   ): string {
     const id = this.generateId();
     const notification: Notification = {
@@ -44,7 +44,7 @@ export class NotificationService {
   success(
     title: string,
     message: string,
-    options?: { autoClose?: boolean; duration?: number }
+    options?: { autoClose?: boolean; duration?: number },
   ): string {
     return this.show('success', title, message, options);
   }
@@ -52,7 +52,7 @@ export class NotificationService {
   error(
     title: string,
     message: string,
-    options?: { autoClose?: boolean; duration?: number }
+    options?: { autoClose?: boolean; duration?: number },
   ): string {
     return this.show('error', title, message, { autoClose: false, ...options });
   }
@@ -60,7 +60,7 @@ export class NotificationService {
   warning(
     title: string,
     message: string,
-    options?: { autoClose?: boolean; duration?: number }
+    options?: { autoClose?: boolean; duration?: number },
   ): string {
     return this.show('warning', title, message, options);
   }
@@ -68,7 +68,7 @@ export class NotificationService {
   info(
     title: string,
     message: string,
-    options?: { autoClose?: boolean; duration?: number }
+    options?: { autoClose?: boolean; duration?: number },
   ): string {
     return this.show('info', title, message, options);
   }

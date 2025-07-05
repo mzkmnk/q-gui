@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MainLayoutComponent } from './main-layout.component';
-import { StateService } from '../../core/services/state.service';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { StateService } from '../../core/services/state.service';
+import { MainLayoutComponent } from './main-layout.component';
 
 describe('MainLayoutComponent', () => {
   let component: MainLayoutComponent;
@@ -50,7 +50,7 @@ describe('MainLayoutComponent', () => {
     it('should render menu toggle button', () => {
       const compiled = fixture.nativeElement;
       const menuButton = compiled.querySelector(
-        'button[title="サイドバーを切り替え"]'
+        'button[title="サイドバーを切り替え"]',
       );
 
       expect(menuButton).toBeTruthy();
@@ -59,7 +59,7 @@ describe('MainLayoutComponent', () => {
     it('should render theme toggle button', () => {
       const compiled = fixture.nativeElement;
       const themeButton = compiled.querySelector(
-        'button[title="ダークモード切り替え"]'
+        'button[title="ダークモード切り替え"]',
       );
 
       expect(themeButton).toBeTruthy();
@@ -73,14 +73,14 @@ describe('MainLayoutComponent', () => {
 
       expect(navItems.length).toBeGreaterThan(0);
 
-            const chatLink = Array.from(navItems as NodeListOf<Element>).find((item) => 
-        item.textContent?.includes('チャット')
+      const chatLink = Array.from(navItems as NodeListOf<Element>).find(
+        (item) => item.textContent?.includes('チャット'),
       );
-      const settingsLink = Array.from(navItems as NodeListOf<Element>).find((item) => 
-        item.textContent?.includes('設定')
+      const settingsLink = Array.from(navItems as NodeListOf<Element>).find(
+        (item) => item.textContent?.includes('設定'),
       );
-      const historyLink = Array.from(navItems as NodeListOf<Element>).find((item) => 
-        item.textContent?.includes('履歴')
+      const historyLink = Array.from(navItems as NodeListOf<Element>).find(
+        (item) => item.textContent?.includes('履歴'),
       );
 
       expect(chatLink).toBeTruthy();
@@ -102,9 +102,9 @@ describe('MainLayoutComponent', () => {
 
     it('should render demo sessions when sidebar is expanded', () => {
       const compiled = fixture.nativeElement;
-      const sessionSection = Array.from(compiled.querySelectorAll('h3') as NodeListOf<Element>).find(
-        (h3) => h3.textContent?.includes('最近のセッション')
-      );
+      const sessionSection = Array.from(
+        compiled.querySelectorAll('h3') as NodeListOf<Element>,
+      ).find((h3) => h3.textContent?.includes('最近のセッション'));
 
       expect(sessionSection).toBeTruthy();
     });
@@ -146,7 +146,7 @@ describe('MainLayoutComponent', () => {
       const initialExpanded = stateService.uiState().sidebarExpanded;
 
       const menuButton = fixture.nativeElement.querySelector(
-        'button[title="サイドバーを切り替え"]'
+        'button[title="サイドバーを切り替え"]',
       );
       menuButton.click();
 
@@ -157,7 +157,7 @@ describe('MainLayoutComponent', () => {
       const spy = vi.spyOn(component, 'toggleSidebar');
 
       const menuButton = fixture.nativeElement.querySelector(
-        'button[title="サイドバーを切り替え"]'
+        'button[title="サイドバーを切り替え"]',
       );
       menuButton.click();
 

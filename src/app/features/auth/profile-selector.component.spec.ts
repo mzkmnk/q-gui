@@ -1,13 +1,18 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
+import type { AwsProfile } from '../../core/interfaces';
 import { AuthService } from '../../core/services';
-import { AwsProfile } from '../../core/interfaces';
 import { ProfileSelectorComponent } from './profile-selector.component';
 
 describe('ProfileSelectorComponent', () => {
   let component: ProfileSelectorComponent;
   let fixture: ComponentFixture<ProfileSelectorComponent>;
-  let mockAuthService: any;
+  let mockAuthService: {
+    getProfiles: ReturnType<typeof vi.fn>;
+    setSelectedProfile: ReturnType<typeof vi.fn>;
+    getSelectedProfile: ReturnType<typeof vi.fn>;
+    testConnection: ReturnType<typeof vi.fn>;
+  };
 
   const mockProfiles: AwsProfile[] = [
     {
@@ -77,7 +82,7 @@ describe('ProfileSelectorComponent', () => {
     it('should render all profiles', () => {
       const compiled = fixture.nativeElement;
       const profileCards = compiled.querySelectorAll(
-        '[data-testid="profile-card"]'
+        '[data-testid="profile-card"]',
       );
       expect(profileCards.length).toBe(3);
     });
@@ -113,13 +118,13 @@ describe('ProfileSelectorComponent', () => {
     it('should select profile when clicked', () => {
       const compiled = fixture.nativeElement;
       const firstProfileCard = compiled.querySelector(
-        '[data-testid="profile-card"]'
+        '[data-testid="profile-card"]',
       );
 
       firstProfileCard.click();
 
       expect(mockAuthService.setSelectedProfile).toHaveBeenCalledWith(
-        mockProfiles[0]
+        mockProfiles[0],
       );
     });
 
@@ -146,7 +151,7 @@ describe('ProfileSelectorComponent', () => {
 
       const compiled = fixture.nativeElement;
       const firstProfileCard = compiled.querySelector(
-        '[data-testid="profile-card"]'
+        '[data-testid="profile-card"]',
       );
       expect(firstProfileCard.classList).toContain('selected');
     });
@@ -161,7 +166,7 @@ describe('ProfileSelectorComponent', () => {
     it('should show test connection button for each profile', () => {
       const compiled = fixture.nativeElement;
       const testButtons = compiled.querySelectorAll(
-        '[data-testid="test-connection-btn"]'
+        '[data-testid="test-connection-btn"]',
       );
       expect(testButtons.length).toBe(3);
     });
@@ -169,13 +174,13 @@ describe('ProfileSelectorComponent', () => {
     it('should call test connection when button clicked', () => {
       const compiled = fixture.nativeElement;
       const firstTestButton = compiled.querySelector(
-        '[data-testid="test-connection-btn"]'
+        '[data-testid="test-connection-btn"]',
       );
 
       firstTestButton.click();
 
       expect(mockAuthService.testConnection).toHaveBeenCalledWith(
-        mockProfiles[0]
+        mockProfiles[0],
       );
     });
 
@@ -202,7 +207,7 @@ describe('ProfileSelectorComponent', () => {
 
       const compiled = fixture.nativeElement;
       expect(compiled.textContent).toContain(
-        '利用可能なプロファイルがありません'
+        '利用可能なプロファイルがありません',
       );
     });
 

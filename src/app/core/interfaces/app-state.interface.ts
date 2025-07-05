@@ -1,5 +1,5 @@
-import { AwsProfile, ProfileConnection } from './aws-profile.interface';
-import { ChatState } from './chat.interface';
+import type { AwsProfile, ProfileConnection } from './aws-profile.interface';
+import type { ChatState } from './chat.interface';
 
 export interface AppState {
   readonly auth: AuthState;

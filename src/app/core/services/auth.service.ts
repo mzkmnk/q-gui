@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AwsProfile, ProfileConnection, ConnectionStatus } from '../interfaces';
+import type {
+  AwsProfile,
+  ConnectionStatus,
+  ProfileConnection,
+} from '../interfaces';
 
 @Injectable({
   providedIn: 'root',

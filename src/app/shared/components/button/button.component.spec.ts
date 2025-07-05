@@ -1,5 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ButtonComponent, ButtonVariant, ButtonSize } from './button.component';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ButtonComponent,
+  type ButtonSize,
+  type ButtonVariant,
+} from './button.component';
 
 describe('ButtonComponent', () => {
   let component: ButtonComponent;
@@ -38,7 +42,7 @@ describe('ButtonComponent', () => {
 
     it('should render content', () => {
       // ng-contentを使ったコンテンツ投影をテストするため、テストベッドでコンテンツを設定
-      const testTemplate = `<app-button>Test Button</app-button>`;
+      const _testTemplate = `<app-button>Test Button</app-button>`;
       const testFixture = TestBed.createComponent(ButtonComponent);
 
       // このテストは実際のDOM投影を必要とするため、スキップまたは異なるアプローチが必要

@@ -1,19 +1,19 @@
-import { Injectable, signal, computed } from '@angular/core';
-import {
+import { computed, Injectable, signal } from '@angular/core';
+import { FILE_LIMITS, UI_CONFIG } from '../constants/app.constants';
+import type {
   AppState,
+  AppView,
   AuthState,
+  AwsProfile,
+  ChatSession,
   ChatState,
   FileState,
-  UiState,
-  AwsProfile,
+  Notification,
   ProfileConnection,
-  ChatSession,
   SelectedFile,
   Theme,
-  AppView,
-  Notification,
+  UiState,
 } from '../interfaces';
-import { UI_CONFIG, FILE_LIMITS } from '../constants/app.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -40,7 +40,7 @@ export class StateService {
   // UI state signals
   private readonly _theme = signal<Theme>('system');
   private readonly _sidebarExpanded = signal<boolean>(
-    UI_CONFIG.sidebar.defaultExpanded
+    UI_CONFIG.sidebar.defaultExpanded,
   );
   private readonly _activeView = signal<AppView>('chat');
   private readonly _notifications = signal<Notification[]>([]);
@@ -167,7 +167,7 @@ export class StateService {
     const currentNotifications = this._notifications();
     const updatedNotifications = [notification, ...currentNotifications].slice(
       0,
-      UI_CONFIG.notifications.maxNotifications
+      UI_CONFIG.notifications.maxNotifications,
     );
     this._notifications.set(updatedNotifications);
   }
@@ -175,7 +175,7 @@ export class StateService {
   removeNotification(notificationId: string): void {
     const currentNotifications = this._notifications();
     this._notifications.set(
-      currentNotifications.filter((n) => n.id !== notificationId)
+      currentNotifications.filter((n) => n.id !== notificationId),
     );
   }
 

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { AwsProfile, ProfileConnection, ConnectionStatus } from '../interfaces';
+import type { AwsProfile } from '../interfaces';
 import { AuthService } from './auth.service';
 
 describe('AuthService', () => {

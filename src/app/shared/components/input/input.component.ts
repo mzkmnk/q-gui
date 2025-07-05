@@ -1,10 +1,10 @@
 import {
-  Component,
   ChangeDetectionStrategy,
+  Component,
   input,
   output,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import type { ControlValueAccessor } from '@angular/forms';
 
 export type InputType =
   | 'text'
@@ -76,7 +76,7 @@ export class InputComponent implements ControlValueAccessor {
   readonly inputId = `input-${Math.random().toString(36).substring(2, 9)}`;
 
   value = '';
-  private onChange = (value: string) => {};
+  private onChange = (_value: string) => {};
   private onTouched = () => {};
 
   inputClasses() {
@@ -166,7 +166,7 @@ export class InputComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {
+  setDisabledState(_isDisabled: boolean): void {
     // Angular will handle the disabled state via the input
   }
 }

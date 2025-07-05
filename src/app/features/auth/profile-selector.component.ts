@@ -1,14 +1,13 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  signal,
-  computed,
-  output,
-  OnInit,
-  inject,
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AwsProfile, ProfileConnection } from '../../core/interfaces';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  type OnInit,
+  output,
+  signal,
+} from '@angular/core';
+import type { AwsProfile } from '../../core/interfaces';
 import { AuthService } from '../../core/services';
 import { ButtonComponent } from '../../shared/components';
 
@@ -123,7 +122,7 @@ export class ProfileSelectorComponent implements OnInit {
       if (result.status === 'error') {
         this.connectionError.set(result.error || '接続テストに失敗しました');
       }
-    } catch (error) {
+    } catch (_error) {
       this.connectionError.set('接続テスト中にエラーが発生しました');
     } finally {
       this.isTestingConnection.set(false);
