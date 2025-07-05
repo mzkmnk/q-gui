@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   input,
   output,
-  forwardRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -20,13 +19,6 @@ export type InputSize = 'sm' | 'md' | 'lg';
 @Component({
   selector: 'app-input',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => InputComponent),
-      multi: true,
-    },
-  ],
   template: `
     <div class="relative">
       @if (label()) {
@@ -59,7 +51,7 @@ export type InputSize = 'sm' | 'md' | 'lg';
       <p class="mt-1 text-sm text-red-600 dark:text-red-400">
         {{ error() }}
       </p>
-      } @if (hint() && !error()) {
+      } @else if (hint()) {
       <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
         {{ hint() }}
       </p>
