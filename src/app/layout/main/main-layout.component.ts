@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { StateService } from '../../core/services/state.service';
 import { IconComponent } from '../../shared/components/icon/icon.component';

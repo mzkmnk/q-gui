@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
-import { StateService } from './state.service';
-import {
+import type {
+  AppView,
   AwsProfile,
   ChatSession,
-  SelectedFile,
-  Theme,
-  AppView,
   Notification,
   ProfileConnection,
+  SelectedFile,
+  Theme,
 } from '../interfaces';
+import { StateService } from './state.service';
 
 describe('StateService', () => {
   let service: StateService;

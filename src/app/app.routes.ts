@@ -1,11 +1,11 @@
-import { Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
       import('./layout/main/main-layout.component').then(
-        (m) => m.MainLayoutComponent
+        (m) => m.MainLayoutComponent,
       ),
     children: [
       {
@@ -22,7 +22,7 @@ export const routes: Routes = [
         path: 'auth',
         loadComponent: () =>
           import('./features/auth/auth-page.component').then(
-            (m) => m.AuthPageComponent
+            (m) => m.AuthPageComponent,
           ),
       },
       {

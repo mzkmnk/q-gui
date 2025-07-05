@@ -1,14 +1,14 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  signal,
-  inject,
-  OnInit,
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProfileSelectorComponent } from './profile-selector.component';
-import { AwsProfile } from '../../core/interfaces';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  type OnInit,
+  signal,
+} from '@angular/core';
+import type { AwsProfile } from '../../core/interfaces';
 import { AuthService } from '../../core/services';
+import { ProfileSelectorComponent } from './profile-selector.component';
 
 @Component({
   selector: 'app-auth-page',

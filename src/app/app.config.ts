@@ -1,19 +1,19 @@
 import {
-  ApplicationConfig,
+  type ApplicationConfig,
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideIcons } from '@ng-icons/core';
 import {
-  tablerMenu2,
-  tablerMoon,
-  tablerMessage,
-  tablerSettings,
+  tablerFile,
   tablerHistory,
+  tablerMenu2,
+  tablerMessage,
+  tablerMoon,
   tablerPaperclip,
   tablerSend,
-  tablerFile,
+  tablerSettings,
   tablerX,
 } from '@ng-icons/tabler-icons';
 
