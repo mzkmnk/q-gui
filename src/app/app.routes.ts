@@ -10,13 +10,20 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'chat',
+        redirectTo: 'auth',
         pathMatch: 'full',
       },
       {
         path: 'chat',
         loadComponent: () =>
           import('./features/chat/chat.component').then((m) => m.ChatComponent),
+      },
+      {
+        path: 'auth',
+        loadComponent: () =>
+          import('./features/auth/auth-page.component').then(
+            (m) => m.AuthPageComponent
+          ),
       },
       {
         path: 'settings',
