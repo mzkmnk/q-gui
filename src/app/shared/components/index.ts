@@ -4,3 +4,5 @@ export * from './button/button.component';
 export * from './icon/icon.component';
 // Input component
 export * from './input/input.component';
+// Message component
+export * from './message/message.component';

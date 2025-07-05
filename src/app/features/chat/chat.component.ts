@@ -1,17 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import type { ChatMessage } from '../../core/interfaces/chat.interface';
 import { IconComponent } from '../../shared/components/icon/icon.component';
-
-interface ChatMessage {
-  id: number;
-  type: 'user' | 'assistant';
-  content: string;
-  timestamp: string;
-}
+import { MessageComponent } from '../../shared/components/message/message.component';
 
 @Component({
   selector: 'app-chat',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [IconComponent],
+  imports: [IconComponent, MessageComponent],
   template: `
     <div class="flex flex-col h-full">
       <!-- Chat header -->
@@ -51,30 +46,9 @@ interface ChatMessage {
 
           <!-- Chat messages -->
           <div class="space-y-6">
-            @for (message of demoMessages; track message.id) { @if (message.type
-            === 'user') {
-            <!-- User message -->
-            <div class="flex justify-end">
-              <div
-                class="max-w-xs lg:max-w-md bg-blue-600 text-white rounded-lg px-4 py-2"
-              >
-                <p class="text-sm">{{ message.content }}</p>
-                <p class="text-xs opacity-75 mt-1">{{ message.timestamp }}</p>
-              </div>
-            </div>
-            } @else {
-            <!-- Assistant message -->
-            <div class="flex justify-start">
-              <div
-                class="max-w-xs lg:max-w-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2"
-              >
-                <p class="text-sm">{{ message.content }}</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  {{ message.timestamp }}
-                </p>
-              </div>
-            </div>
-            } }
+            @for (message of demoMessages; track message.id) {
+              <app-message [message]="message" />
+            }
           </div>
         </div>
       </div>
@@ -145,87 +119,87 @@ export class ChatComponent {
   // Demo messages for scroll testing
   readonly demoMessages: ChatMessage[] = [
     {
-      id: 1,
-      type: 'user',
+      id: '1',
+      role: 'user',
       content:
         'TypeScriptでより良いコードを書くためのベストプラクティスを教えてください。',
-      timestamp: '10:30',
+      timestamp: new Date('2024-01-15T10:30:00Z'),
     },
     {
-      id: 2,
-      type: 'assistant',
+      id: '2',
+      role: 'assistant',
       content:
         'TypeScriptのベストプラクティスをいくつか紹介します：1) 厳密な型チェックを有効にする、2) any型の使用を避ける、3) インターフェースを活用した型定義、4) ジェネリクスの適切な使用。これらを実践することで、より安全で保守性の高いコードが書けます。',
-      timestamp: '10:31',
+      timestamp: new Date('2024-01-15T10:31:00Z'),
     },
     {
-      id: 3,
-      type: 'user',
+      id: '3',
+      role: 'user',
       content:
         'Angularのコンポーネント設計で気をつけるべきポイントはありますか？',
-      timestamp: '10:35',
+      timestamp: new Date('2024-01-15T10:35:00Z'),
     },
     {
-      id: 4,
-      type: 'assistant',
+      id: '4',
+      role: 'assistant',
       content:
         'Angularコンポーネント設計のポイント：1) 単一責任の原則を守る、2) inputとoutputを明確に定義、3) OnPush変更検知戦略の活用、4) ライフサイクルフックの適切な使用、5) テストしやすい設計を心がける。これらを意識すると良いコンポーネントが作れます。',
-      timestamp: '10:36',
+      timestamp: new Date('2024-01-15T10:36:00Z'),
     },
     {
-      id: 5,
-      type: 'user',
+      id: '5',
+      role: 'user',
       content: 'パフォーマンス最適化の方法を具体的に教えてください。',
-      timestamp: '10:40',
+      timestamp: new Date('2024-01-15T10:40:00Z'),
     },
     {
-      id: 6,
-      type: 'assistant',
+      id: '6',
+      role: 'assistant',
       content:
         'Angularアプリのパフォーマンス最適化手法：1) Lazy Loading、2) TrackBy関数の使用、3) OnPush変更検知、4) 仮想スクロール、5) プリロード戦略、6) バンドル最適化、7) Service Workerの活用。段階的に適用していくことをお勧めします。',
-      timestamp: '10:41',
+      timestamp: new Date('2024-01-15T10:41:00Z'),
     },
     {
-      id: 7,
-      type: 'user',
+      id: '7',
+      role: 'user',
       content:
         'Rxjsを使ったリアクティブプログラミングについて詳しく教えてください。',
-      timestamp: '10:45',
+      timestamp: new Date('2024-01-15T10:45:00Z'),
     },
     {
-      id: 8,
-      type: 'assistant',
+      id: '8',
+      role: 'assistant',
       content:
         'RxJSリアクティブプログラミングの基本：1) Observableストリーム、2) オペレータの活用（map, filter, merge等）、3) エラーハンドリング、4) メモリリーク対策（unsubscribe）、5) AsyncPipeの活用。実際のコード例も見せましょうか？',
-      timestamp: '10:46',
+      timestamp: new Date('2024-01-15T10:46:00Z'),
     },
     {
-      id: 9,
-      type: 'user',
+      id: '9',
+      role: 'user',
       content:
         'はい、実際のコード例を見せてください。HTTPリクエストの処理方法についても知りたいです。',
-      timestamp: '10:50',
+      timestamp: new Date('2024-01-15T10:50:00Z'),
     },
     {
-      id: 10,
-      type: 'assistant',
+      id: '10',
+      role: 'assistant',
       content:
         'HTTPリクエストのコード例をお見せします。HttpClientを使った基本的なGETリクエスト、エラーハンドリング、リトライ機能、キャッシュ戦略など、実際のアプリケーションで使用される実装パターンを含めて説明いたします。',
-      timestamp: '10:51',
+      timestamp: new Date('2024-01-15T10:51:00Z'),
     },
     {
-      id: 11,
-      type: 'user',
+      id: '11',
+      role: 'user',
       content:
         'テスト自動化についても相談したいのですが、どのような戦略が効果的でしょうか？',
-      timestamp: '10:55',
+      timestamp: new Date('2024-01-15T10:55:00Z'),
     },
     {
-      id: 12,
-      type: 'assistant',
+      id: '12',
+      role: 'assistant',
       content:
         'テスト自動化戦略：1) テストピラミッド（Unit > Integration > E2E）、2) TDD/BDDアプローチ、3) モック戦略、4) CI/CDパイプラインでの自動テスト実行、5) カバレッジ指標の活用。段階的に導入し、ROIを測定しながら進めることが重要です。',
-      timestamp: '10:56',
+      timestamp: new Date('2024-01-15T10:56:00Z'),
     },
   ];
 }
